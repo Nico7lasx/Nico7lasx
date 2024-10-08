@@ -1,0 +1,7 @@
+- 👋 Hi, I’m @Nico7lasx
+- 👀 I’m interested in IT
+- 🌱 I’m currently learning LuaU
+- 💞️ I’m looking to collaborate with other devs
+- 📫 Discord: Nico7las
+- 😄 Pronouns: he/him
+- ⚡ Fun fact: I have a big snake
