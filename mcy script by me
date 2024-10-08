@@ -1,0 +1,187 @@
+-- Mad City Seaoson 4 Script by Nico7las
+-- Added get & bring vehicle function (teleport any vehicle to you and enter it automatically! -> (you must enter the exact name, including the capital letter at the beginning))
+-- Removed Missile Mod due to it rigging the vehicle
+-- Teleport wont work that good because of teleport detection
+-- Rob stores most of the time detected
+
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+
+local Window = OrionLib:MakeWindow({Name = "Mad City S4 Script by Nico7las", HidePremium = false, SaveConfig = true, ConfigFolder = "MadCityConfig"})
+
+local MainTab = Window:MakeTab({
+    Name = "Main",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+MainTab:AddToggle({
+    Name = "Anti Report (pretty useless due to nametag)",
+    Default = false,
+    Callback = function(state)
+        _G.re = state
+        while _G.re == true do
+            wait()
+            pcall(function()
+                for i,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do 
+                    if v:IsA("Accessory") or v:IsA("BillboardGui") or v:IsA("Decal") or v:IsA("Shirt") or v:IsA("Pants") then 
+                        v:Destroy()
+                    end
+                end
+            end)
+        end
+    end
+})
+
+MainTab:AddTextbox({
+    Name = "Get & Bring Any Vehicle",
+    Default = "",
+    TextDisappear = true,
+    Callback = function(vehicle)
+        game:GetService("Workspace").ObjectSelection[vehicle].DriveSeat.Disabled = false
+        game:GetService("Workspace").ObjectSelection[vehicle]:MoveTo(game.Players.LocalPlayer.Character.HumanoidRootPart.Position)
+        wait(2)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").ObjectSelection[vehicle].DriveSeat.CFrame
+        wait(2)
+        game:GetService("Workspace").ObjectSelection[vehicle].DriveSeat.Disabled = true
+    end
+})
+
+MainTab:AddButton({
+    Name = "Bring Your Vehicle and enter it",
+    Callback = function()
+        local vehicle = game:GetService("Workspace").ObjectSelection[game.Players.LocalPlayer.Name .. "'s Vehicle"]
+        vehicle:MoveTo(game.Players.LocalPlayer.Character.HumanoidRootPart.Position)
+        wait(0.5)
+        vehicle.DriveSeat.Disabled = false
+        wait(0.5)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = vehicle.DriveSeat.CFrame
+    end
+})
+
+MainTab:AddButton({
+    Name = "Fix Stuck in Vehicle",
+    Callback = function()
+        game:GetService("Workspace").ObjectSelection[game.Players.LocalPlayer.Name .. "'s Vehicle"]:MoveTo(game.Players.LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(20, 20, 0))
+    end
+})
+
+MainTab:AddButton({
+    Name = "Get Emotes",
+    Callback = function()
+        game.Players.LocalPlayer.UserId = 28995792
+    end
+})
+
+MainTab:AddButton({
+    Name = "Walk Through Doors",
+    Callback = function()
+        for i,v in pairs(workspace:GetDescendants()) do
+            if v.Name == "Door" and v.ClassName == "Part" and v.CanCollide == true then
+                wait()
+                v.CanCollide = false
+            end
+        end
+    end
+})
+
+MainTab:AddButton({
+    Name = "Tp to CrimeBase (hard due to teleport detection)",
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").CrimBaseIgnore.Part.CFrame
+    end
+})
+
+MainTab:AddTextbox({
+    Name = "Tp to Player (hard due to teleport detection)",
+    Default = "",
+    TextDisappear = true,
+    Callback = function(playerName)
+        _G.Player = playerName
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players[_G.Player].Character.HumanoidRootPart.CFrame
+    end
+})
+
+MainTab:AddToggle({
+    Name = "Loop Tp (hard due to teleport detection)",
+    Default = false,
+    Callback = function(state)
+        _G.loopp = state
+        while _G.loopp == true do
+            pcall(function()
+                wait(0.1)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players[_G.Player].Character.HumanoidRootPart.CFrame
+            end)
+        end
+    end
+})
+
+MainTab:AddButton({
+    Name = "Bring Your Vehicle & enter it",
+    Callback = function()
+        local vehicle = game:GetService("Workspace").ObjectSelection[game.Players.LocalPlayer.Name .. "'s Vehicle"]
+        vehicle:MoveTo(game.Players.LocalPlayer.Character.HumanoidRootPart.Position)
+        wait(0.5)
+        vehicle.DriveSeat.Disabled = false
+        wait(0.5)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = vehicle.DriveSeat.CFrame
+    end
+})
+
+MainTab:AddToggle({
+    Name = "Rob Stores",
+    Default = false,
+    Callback = function(state)
+        _G.Auto = state
+        while _G.Auto == true do
+            wait()
+            pcall(function()
+                for i,v in pairs(game:GetService("Workspace").ObjectSelection:GetDescendants()) do 
+                    if v.Name == "Cash" or v.Name == "Steal" or v.Name == "SmashCash" or v.Name == "ATM" then
+                        wait(0.5)
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame * CFrame.new(0, 5, 0)
+                        wait(0.5)
+                        v:FindFirstChildOfClass("Script").Event:FireServer()  
+                    end
+                end
+            end)
+        end
+    end
+})
+
+ModsTab:AddTextbox({
+    Name = "Gun Name",
+    Default = "M4A1",
+    TextDisappear = true,
+    Callback = function(gunName)
+        _G.gun = gunName
+    end
+})
+
+ModsTab:AddTextbox({
+    Name = "Dupe Amount",
+    Default = "1",
+    TextDisappear = true,
+    Callback = function(amount)
+        amount = tonumber(amount)
+        for i = 1, amount do
+            local dupe = game.Players.LocalPlayer.Backpack[_G.gun]:FindFirstChildOfClass("LocalScript"):Clone()
+            dupe.Parent = game.Players.LocalPlayer.Backpack[_G.gun]
+        end
+    end
+})
+
+ModsTab:AddToggle({
+    Name = "Infinite Nitro",
+    Default = false,
+    Callback = function(state)
+        _G.Boost = state
+        while _G.Boost == true do
+            wait()
+            pcall(function()
+                game:GetService("Workspace").ObjectSelection[game.Players.LocalPlayer.Name .. "'s Vehicle"].CarChassis.Boost.Value = 9e18
+            end)
+        end
+    end
+})
+
+OrionLib:Init()
